@@ -24,8 +24,8 @@ func GetSetPoints() map[int32][]image.Point {
 	weaponPoints := []image.Point{image.Pt(setFirstCell, setThirdCell)}
 	return map[int32][]image.Point{
 
-		27:  {image.Pt(setFirstCell, setFirstCell)},
-		43:  {image.Pt(setFirstCell, setSecondCell)},
+		27:  {image.Pt(setFirstCell, setFirstCell)}, // Hat
+		43:  {image.Pt(setFirstCell, setSecondCell)}, // Cloak
 		73:  weaponPoints,
 		39:  weaponPoints,
 		93:  weaponPoints,
@@ -37,15 +37,15 @@ func GetSetPoints() map[int32][]image.Point {
 		125: weaponPoints,
 		80:  weaponPoints,
 		65:  weaponPoints,
-		87:  {image.Pt(setFirstCell, setFourthCell)},
-		1:   {image.Pt(setFirstCell, setFifthCell)},
+		87:  {image.Pt(setFirstCell, setFourthCell)}, // Shield
+		1:   {image.Pt(setFirstCell, setFifthCell)}, // Pet
 
-		33: {image.Pt(setFifthCell, setFirstCell)},
+		33: {image.Pt(setFifthCell, setFirstCell)}, // Amulet
 		17: {
-			image.Pt(setFifthCell, setSecondCell),
-			image.Pt(setFifthCell, setThirdCell),
+			image.Pt(setFifthCell, setSecondCell), // Ring1
+			image.Pt(setFifthCell, setThirdCell), // Ring2
 		},
-		58: {image.Pt(setFifthCell, setFourthCell)},
-		45: {image.Pt(setFifthCell, setFifthCell)},
+		58: {image.Pt(setFifthCell, setFourthCell)}, // Belt
+		45: {image.Pt(setFifthCell, setFifthCell)}, // Boots
 	}
 }

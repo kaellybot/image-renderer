@@ -5,7 +5,7 @@ go 1.22.0
 require (
 	github.com/chai2010/webp v1.1.1
 	github.com/disintegration/imaging v1.6.2
-	github.com/dofusdude/dodugo v1.0.0-rc.5
+	github.com/dofusdude/dodugo v1.0.0-rc.7
 )
 
 require (
