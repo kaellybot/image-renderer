@@ -11,12 +11,12 @@ const (
 	Right
 	SetImageFolderPath = "outputs"
 	SetItemMarginPx    = 10
-	setItemSizePx      = 128
+	SetItemSizePx      = 128
 	setFirstCell       = SetItemMarginPx
-	setSecondCell      = setFirstCell + setItemSizePx + SetItemMarginPx
-	setThirdCell       = setSecondCell + setItemSizePx + SetItemMarginPx
-	setFourthCell      = setThirdCell + setItemSizePx + SetItemMarginPx
-	setFifthCell       = setFourthCell + setItemSizePx + SetItemMarginPx
+	setSecondCell      = setFirstCell + SetItemSizePx + SetItemMarginPx
+	setThirdCell       = setSecondCell + SetItemSizePx + SetItemMarginPx
+	setFourthCell      = setThirdCell + SetItemSizePx + SetItemMarginPx
+	setFifthCell       = setFourthCell + SetItemSizePx + SetItemMarginPx
 )
 
 //nolint:exhaustive // No other types needed.
