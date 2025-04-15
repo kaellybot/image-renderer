@@ -1,24 +1,30 @@
 package main
 
 import (
+	"fmt"
 	"image"
-	"image/color/palette"
-	"image/gif"
+	"image/png"
 	"log"
 	"os"
-	"sync"
+	"os/exec"
+	"path/filepath"
 	"time"
 
 	"github.com/kbinani/screenshot"
-	"golang.org/x/image/draw" // for resizing (optional)
+	// for resizing (optional)
 )
 
 func main() {
-	bounds := screenshot.GetDisplayBounds(0)
+	bounds := image.Rect(350, 200, 1000, 1010)
 	duration := 10 * time.Second
-	delay := 5 // in 100ths of a second → 50ms
+	fps := 20
+
+	delay := 100 / fps
 	frameDelay := time.Duration(delay*10) * time.Millisecond
 	frameCount := int(duration / frameDelay)
+
+	outputDir := "gif_frames"
+	outputGIF := "out.gif"
 
 	var images []*image.RGBA
 
@@ -35,41 +41,60 @@ func main() {
 		time.Sleep(time.Duration(delay*10)*time.Millisecond - time.Since(frameStart))
 	}
 
-	log.Printf("record ended in %v, preprocessing images...\n", time.Since(beforeRecording))
-	beforeProcessing := time.Now()
-
-	palettedImages := make([]*image.Paletted, len(images))
-	delays := make([]int, len(images))
-	var wg sync.WaitGroup
-	for i, img := range images {
-		wg.Add(1)
-		go func(i int, img image.Image) {
-			defer wg.Done()
-			bounds := img.Bounds()
-			paletted := image.NewPaletted(bounds, palette.Plan9)
-			draw.Draw(paletted, bounds, img, image.Point{}, draw.Src)
-			palettedImages[i] = paletted
-			delays[i] = delay
-		}(i, img)
+	log.Printf("record ended in %v\n", time.Since(beforeRecording))
+	if err := SaveFrames(images, outputDir); err != nil {
+		log.Fatalf("saving frames: %v", err)
 	}
-	wg.Wait()
+	defer os.RemoveAll(outputDir)
 
-	log.Printf("preprocessing ended in %v, creating GIF...\n", time.Since(beforeProcessing))
-	beforeGIF := time.Now()
-	// Write to file
-	f, err := os.Create("screen_record.gif")
-	if err != nil {
-		log.Fatal(err)
-	}
-	defer f.Close()
-
-	err = gif.EncodeAll(f, &gif.GIF{
-		Image: palettedImages,
-		Delay: delays,
-	})
-	if err != nil {
-		log.Fatal(err)
+	if err := GenerateGIFWithFFmpeg(outputDir, fps, outputGIF); err != nil {
+		log.Fatalf("ffmpeg failed: %v", err)
 	}
 
-	log.Printf("GIF created in %v: screen_record.gif\n", time.Since(beforeGIF))
+	fmt.Println("GIF saved to", outputGIF)
+}
+
+func SaveFrames(frames []*image.RGBA, dir string) error {
+	if err := os.MkdirAll(dir, 0755); err != nil {
+		return err
+	}
+
+	for i, img := range frames {
+		filename := filepath.Join(dir, fmt.Sprintf("frame_%04d.png", i))
+		f, err := os.Create(filename)
+		if err != nil {
+			return err
+		}
+		if err := png.Encode(f, img); err != nil {
+			return err
+		}
+		f.Close()
+	}
+	return nil
+}
+
+func GenerateGIFWithFFmpeg(dir string, fps int, out string) error {
+	input := filepath.Join(dir, "frame_%04d.png")
+	palette := filepath.Join(dir, "palette.png")
+
+	// Step 1: generate palette
+	cmd1 := exec.Command("ffmpeg", "-y", "-framerate", fmt.Sprint(fps), "-i", input,
+		"-vf", "palettegen", palette)
+	cmd1.Stderr = os.Stderr
+	cmd1.Stdout = os.Stdout
+	if err := cmd1.Run(); err != nil {
+		return fmt.Errorf("palettegen failed: %w", err)
+	}
+
+	// Step 2: generate GIF using palette
+	cmd2 := exec.Command("ffmpeg", "-y", "-framerate", fmt.Sprint(fps), "-i", input,
+		"-i", palette,
+		"-filter_complex", fmt.Sprintf("fps=%d[x];[x][1:v]paletteuse", fps),
+		out)
+	cmd2.Stderr = os.Stderr
+	cmd2.Stdout = os.Stdout
+	if err := cmd2.Run(); err != nil {
+		return fmt.Errorf("GIF generation failed: %w", err)
+	}
+	return nil
 }
