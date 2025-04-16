@@ -12,9 +12,9 @@ import (
 func main() {
 	bounds := image.Rect(350, 200, 1000, 1010)
 	duration := 10 * time.Second
-	fps := 20
+	fps := 15
 	outputDir := "gif_frames"
-	outputGIF := "out.gif"
+	outputWEBP := "out.webp"
 
 	os.Mkdir(outputDir, 0755)
 	defer os.RemoveAll(outputDir)
@@ -25,10 +25,10 @@ func main() {
 		return
 	}
 
-	if err := images.GenerateGIFWithFFmpeg(outputDir, fps, outputGIF); err != nil {
-		log.Printf("ffmpeg gif generation failed: %v\n", err)
+	if err := images.GenerateWebpWithFFmpeg(outputDir, fps, outputWEBP); err != nil {
+		log.Printf("ffmpeg webp generation failed: %v\n", err)
 		return
 	}
 
-	fmt.Println("GIF saved to", outputGIF)
+	fmt.Println("WEBP saved to", outputWEBP)
 }
