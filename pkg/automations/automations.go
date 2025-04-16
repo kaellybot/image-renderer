@@ -1,40 +1,43 @@
 package automations
 
 import (
+	"embed"
 	"fmt"
-	"math/rand"
-	"time"
+	"os"
+	"os/exec"
+	"path/filepath"
 
-	"github.com/go-vgo/robotgo"
+	amqp "github.com/kaellybot/kaelly-amqp"
 )
 
+//go:embed *.ahk
+var Folder embed.FS
+
 func SetupDiscordTutorial() error {
-	pids, err := robotgo.FindIds("Discord")
+	return runAHKScript("_discord_tutorial_setup.ahk")
+}
+
+func RunCommandTutorial(commandName string, locale amqp.Language) error {
+	return runAHKScript(fmt.Sprintf("%v_%v.ahk", commandName, locale))
+}
+
+func runAHKScript(name string) error {
+	script, err := Folder.ReadFile(name)
 	if err != nil {
 		return err
 	}
-	if len(pids) == 0 {
-		return fmt.Errorf("discord not found")
+
+	tmpDir := os.TempDir()
+	scriptPath := filepath.Join(tmpDir, name)
+
+	if err := os.WriteFile(scriptPath, script, 0644); err != nil {
+		return err
 	}
+	defer os.Remove(scriptPath)
 
-	// Focus the first matching Discord window
-	robotgo.ActivePid(pids[0])
+	cmd := exec.Command("AutoHotkeyUX.exe", scriptPath)
+	cmd.Stdout = os.Stdout
+	cmd.Stderr = os.Stderr
 
-	// Click server "tutorial"
-	robotgo.MoveSmooth(40, 250)
-	robotgo.Click("left")
-	time.Sleep(500 * time.Millisecond)
-
-	// Click channel inside that server
-	robotgo.MoveSmooth(150, 220)
-	robotgo.Click("left")
-	return nil
-}
-
-func TypeTextSlowly(text string, minDelay, maxDelay int) {
-	for _, char := range text {
-		robotgo.TypeStr(string(char))
-		delay := time.Duration(rand.Intn(maxDelay-minDelay+1)+minDelay) * time.Millisecond
-		time.Sleep(delay)
-	}
+	return cmd.Run()
 }
