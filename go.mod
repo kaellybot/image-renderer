@@ -1,11 +1,11 @@
 module kaellybot/image-renderer
 
-go 1.22.0
+go 1.24
 
 require (
-	github.com/chai2010/webp v1.1.1
+	github.com/chai2010/webp v1.4.0
 	github.com/disintegration/imaging v1.6.2
-	github.com/dofusdude/dodugo v1.0.0-rc.7
+	github.com/dofusdude/dodugo v1.0.0
 )
 
 require (
