@@ -3,7 +3,7 @@ package main
 import (
 	"fmt"
 	"image"
-	"kaellybot/image-renderer/pkg/ffmpeg"
+	"kaellybot/image-renderer/pkg/images"
 	"log"
 	"os"
 	"time"
@@ -20,12 +20,12 @@ func main() {
 	defer os.RemoveAll(outputDir)
 
 	log.Println("Recording...")
-	if err := ffmpeg.RecordScreen(outputDir, duration, fps, bounds); err != nil {
+	if err := images.RecordScreen(outputDir, duration, fps, bounds); err != nil {
 		log.Printf("ffmpeg recording failed: %v\n", err)
 		return
 	}
 
-	if err := ffmpeg.GenerateGIFWithFFmpeg(outputDir, fps, outputGIF); err != nil {
+	if err := images.GenerateGIFWithFFmpeg(outputDir, fps, outputGIF); err != nil {
 		log.Printf("ffmpeg gif generation failed: %v\n", err)
 		return
 	}
