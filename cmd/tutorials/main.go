@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"image"
+	"kaellybot/image-renderer/pkg/automations"
 	"kaellybot/image-renderer/pkg/images"
 	"log"
 	"os"
@@ -18,6 +19,11 @@ func main() {
 
 	os.Mkdir(outputDir, 0755)
 	defer os.RemoveAll(outputDir)
+
+	if err := automations.SetupDiscordTutorial(); err != nil {
+		log.Printf("discord setup failed: %v\n", err)
+		return
+	}
 
 	log.Println("Recording...")
 	if err := images.RecordScreen(outputDir, duration, fps, bounds); err != nil {
