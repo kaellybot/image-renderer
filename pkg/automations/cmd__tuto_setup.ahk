@@ -18,3 +18,4 @@ Click(40, 250)
 
 ; Click tutorial channel
 Click(150, 220)
+Sleep(1000)
