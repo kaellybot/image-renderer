@@ -39,15 +39,16 @@ func runAHKScript(command constants.Command, locale amqp.Language) error {
 
 	if len(command.Arguments) > 0 {
 		script := string(rawScript)
-
 		args, found := command.Arguments[locale]
 		if !found {
 			return fmt.Errorf("missing locale %v for command '%v'", locale, command.Name)
 		}
 
-		for i, arg := range args {
-			script = strings.Replace(script, fmt.Sprintf("{{ %v }}", i), arg, 1)
+		for _, arg := range args {
+			script = strings.Replace(script, "{{ . }}", arg, 1)
 		}
+
+		rawScript = []byte(script)
 	}
 
 	if err := os.WriteFile(scriptPath, rawScript, 0644); err != nil {
