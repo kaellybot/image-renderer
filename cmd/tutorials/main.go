@@ -14,7 +14,7 @@ import (
 )
 
 func main() {
-	commandName := "map"
+	commandName := "pos"
 	locale := amqp.Language_FR
 	fps := 15
 

@@ -67,6 +67,11 @@ func GetCommands() map[string]Command {
 			Duration: 8 * time.Second,
 			Bounds:   image.Rect(350, 400, 1000, 1010),
 		},
+		"pos": {
+			Name:     "pos",
+			Duration: 8 * time.Second,
+			Bounds:   image.Rect(350, 150, 1000, 1010),
+		},
 	}
 }
 
@@ -74,9 +79,7 @@ func TODO() []string {
 	return []string{
 		"almanax_day", "almanax_effects", "almanax_resources",
 		"config_get", "config_almanax", "config_rss", "config_server", "config_twitter",
-		"help",
 		"item",
-		"pos",
 		"set",
 	}
 }
