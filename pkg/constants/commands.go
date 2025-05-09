@@ -72,6 +72,18 @@ func GetCommands() map[string]Command {
 			Duration: 8 * time.Second,
 			Bounds:   image.Rect(350, 150, 1000, 1010),
 		},
+		"set": {
+			Name:     "set",
+			Duration: 10 * time.Second,
+			Bounds:   image.Rect(350, 270, 1000, 1010),
+			Arguments: map[amqp.Language][]string{
+				amqp.Language_FR: {"Bouftou"},
+				amqp.Language_EN: {"Gobball"},
+				amqp.Language_ES: {"Jalató"},
+				amqp.Language_DE: {"Fresssack"},
+				amqp.Language_PT: {"Papatudo"},
+			},
+		},
 	}
 }
 
@@ -80,6 +92,5 @@ func TODO() []string {
 		"almanax_day", "almanax_effects", "almanax_resources",
 		"config_get", "config_almanax", "config_rss", "config_server", "config_twitter",
 		"item",
-		"set",
 	}
 }
