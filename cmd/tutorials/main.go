@@ -14,7 +14,7 @@ import (
 )
 
 func main() {
-	commandName := "job_get"
+	commandName := "job_set"
 	locale := amqp.Language_FR
 	fps := 15
 
