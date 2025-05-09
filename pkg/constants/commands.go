@@ -38,6 +38,18 @@ func GetCommands() map[string]Command {
 				amqp.Language_PT: {"Bonta", "Espírito"},
 			},
 		},
+		"item": {
+			Name:     "item",
+			Duration: 10 * time.Second,
+			Bounds:   image.Rect(350, 270, 1000, 1010),
+			Arguments: map[amqp.Language][]string{
+				amqp.Language_FR: {"Amulette Bouftou"},
+				amqp.Language_EN: {"Gobball Amulet"},
+				amqp.Language_ES: {"Amuleto Jalató"},
+				amqp.Language_DE: {"Amulett Fresssacks"},
+				amqp.Language_PT: {"Amuleto Papatudo"},
+			},
+		},
 		"job_get": {
 			Name:     "job_get",
 			Duration: 10 * time.Second,
@@ -91,6 +103,5 @@ func TODO() []string {
 	return []string{
 		"almanax_day", "almanax_effects", "almanax_resources",
 		"config_get", "config_almanax", "config_rss", "config_server", "config_twitter",
-		"item",
 	}
 }
