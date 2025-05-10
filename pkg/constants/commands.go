@@ -60,6 +60,38 @@ func GetCommands() map[string]Command {
 				amqp.Language_PT: {"Bonta", "Espírito"},
 			},
 		},
+		"config_get": {
+			Name:     "config_get",
+			Duration: 8 * time.Second,
+			Bounds:   image.Rect(350, 400, 1000, 1010),
+		},
+		"config_almanax": {
+			Name:     "config_almanax",
+			Duration: 10 * time.Second,
+			Bounds:   image.Rect(350, 400, 1000, 1010),
+		},
+		"config_rss": {
+			Name:     "config_rss",
+			Duration: 12 * time.Second,
+			Bounds:   image.Rect(350, 400, 1000, 1010),
+		},
+		"config_server": {
+			Name:     "config_server",
+			Duration: 10 * time.Second,
+			Bounds:   image.Rect(350, 400, 1000, 1010),
+		},
+		"config_twitter": {
+			Name:     "config_twitter",
+			Duration: 12 * time.Second,
+			Bounds:   image.Rect(350, 400, 1000, 1010),
+			Arguments: map[amqp.Language][]string{
+				amqp.Language_FR: {"DOFUSfr"},
+				amqp.Language_EN: {"DOFUS_EN"},
+				amqp.Language_ES: {"ES_DOFUS"},
+				amqp.Language_DE: {"DOFUS_EN"},
+				amqp.Language_PT: {"DOFUS_EN"},
+			},
+		},
 		"item": {
 			Name:     "item",
 			Duration: 10 * time.Second,
@@ -118,15 +150,5 @@ func GetCommands() map[string]Command {
 				amqp.Language_PT: {"Papatudo"},
 			},
 		},
-	}
-}
-
-func TODO() []string {
-	return []string{
-		"config_get",
-		"config_almanax",
-		"config_rss",
-		"config_server",
-		"config_twitter",
 	}
 }

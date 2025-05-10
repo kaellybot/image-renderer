@@ -14,7 +14,7 @@ import (
 )
 
 func main() {
-	commandName := "almanax_resources"
+	commandName := "about"
 	locale := amqp.Language_FR
 	fps := 15
 
