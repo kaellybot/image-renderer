@@ -1,6 +1,7 @@
 package main
 
 import (
+	"flag"
 	"fmt"
 	"kaellybot/image-renderer/pkg/automations"
 	"kaellybot/image-renderer/pkg/constants"
@@ -8,19 +9,30 @@ import (
 	"log"
 	"os"
 	"path/filepath"
+	"slices"
 	"sync"
 
 	amqp "github.com/kaellybot/kaelly-amqp"
 )
 
 func main() {
-	commandName := "about"
-	locale := amqp.Language_FR
+	commandArg := flag.String("command", "", "Command name to execute")
+	localeArg := flag.String("locale", "FR", "Locale (2 chars, uppercase, default 'FR')")
+	flag.Parse()
 	fps := 15
+	locale := amqp.Language_EN
+	if amqpLocale, found := amqp.Language_value[*localeArg]; found {
+		locale = amqp.Language(amqpLocale)
+	}
 
-	command, found := constants.GetCommands()[commandName]
+	command, found := constants.GetCommands()[*commandArg]
 	if !found {
-		log.Printf("command %v not found\n", commandName)
+		commandNames := make([]string, 0)
+		for name := range constants.GetCommands() {
+			commandNames = append(commandNames, name)
+		}
+		slices.Sort(commandNames)
+		log.Printf("command %v not found\nList available: %v\n", *commandArg, commandNames)
 		return
 	}
 
@@ -47,7 +59,7 @@ func main() {
 
 	go func() {
 		log.Println("Automating...")
-		if err := automations.RunCommandTutorial(command, amqp.Language_FR); err != nil {
+		if err := automations.RunCommandTutorial(command, locale); err != nil {
 			log.Printf("ffmpeg recording failed: %v\n", err)
 		}
 		wg.Done()
